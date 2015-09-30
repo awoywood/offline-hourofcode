@@ -1,7 +1,7 @@
 var completeStorage = 'hoc-stage';
 var incompleteStorage = 'hoc-istage';
 var linesStorage = 'hoc-lns';
-var htmlLevelPrefix = 'index';
+var htmlLevelPrefix = 'level';
 function initLevels(i){
 	var clean = localStorage[completeStorage];
 	if(!clean){
@@ -17,7 +17,6 @@ function initLevels(i){
 function isLevelCompleted(i){
 	var data = localStorage[completeStorage];
 	var idata = localStorage[incompleteStorage];
-	var val;
 	while(i>1){
 		idata = idata>>1;
 		data = data>>1;
@@ -29,24 +28,26 @@ function isLevelCompleted(i){
 
 function setLevelAsCompleted(i){
 	var mask = 1;
+	var level = i;
 	while(i > 1){
 		mask = mask << 1;
 		i--;
 	}
 	localStorage[completeStorage] = mask | localStorage[completeStorage];
 	localStorage[incompleteStorage] = ~mask & localStorage[incompleteStorage];
-	localStorage[linesStorage+i] = bloques_usados()-1;
+	localStorage[linesStorage+level] = bloques_usados()-1;
 }
 
 function setLevelAsIncompleted(i){
 	var mask = 1;
+	var level = i;
 	while(i > 1){
 		mask = mask << 1;
 		i--;
 	}
 	localStorage[incompleteStorage] = mask | localStorage[incompleteStorage];
 	localStorage[completeStorage] = ~mask & localStorage[completeStorage];
-	localStorage[linesStorage+i] = bloques_usados()-1;
+	localStorage[linesStorage+level] = bloques_usados()-1;
 }
 
 function getAllBlocks(){
@@ -77,7 +78,7 @@ initLevels();
 $('#levels-bar li').each(function (i){
 	applyColor($(this), i+1);
 	$(this).click(function(){
-		window.location.href = htmlLevelPrefix+'.php?level='+(i+1);
+		window.location.href = htmlLevelPrefix+(i+1)+'.html';
 	});	
 });
 
@@ -99,14 +100,14 @@ function lastLevelMessage(){
 }
 
 
-$("#game-tutorial span").click(function(){
-		$(document).modalVideoDisplay(HOC_LEVEL.tutorial);
+$("#game-tutorial").click(function(){
+		showHelp();
 	});
 	
 function linkReference(){
 	var max = parseInt($('#i-maxlevel').val());
 	var lv = parseInt($('#i-level').val());
-	return lv<max?htmlLevelPrefix+'.php?level='+(lv+1):'felicitaciones.php';
+	return lv<max?htmlLevelPrefix+(lv+1)+'.html':'felicitaciones.html';
 }
 
 

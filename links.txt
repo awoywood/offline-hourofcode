@@ -1,3 +1,0 @@
-BLOCKLY + SQL:
-https://groups.google.com/forum/#!topic/blockly/v4lxL6mF6ZM
-	https://www.youtube.com/watch?v=8D1rm6NARVo
