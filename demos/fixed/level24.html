@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html>
+  <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
+  <script src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">      
+  <title>Hora del C&oacute;digo Chile - Blockly</title>
+  
+  <link rel="stylesheet" href="css/header.css">
+<!--<link rel="stylesheet" href="css/main.css">-->
+<link rel="stylesheet" href="css/style.css">
+<!--<link rel="stylesheet" href="css/modalPlugin.css">-->
+<link rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap.min.css">
+<link href='https://fonts.googleapis.com/css?family=Comfortaa:700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="js/highlight/railscasts.css">
+  <script src="level/json/tileSimbolo.js"></script>
+<script src="../../blockly_compressed.js"></script>
+<script src="../../blocks_compressed.js"></script>
+<script src="../../javascript_compressed.js"></script>
+<script src="../../msg/js/es.js"></script>
+<script src="../../blocks/movimiento.js"></script>
+<script src="../../generators/javascript/movimiento.js"></script>
+<script src="../../jsinterpreter/acorn_interpreter.js"></script>
+</head> 
+  <body>
+    <div id="container" class="container-fluid">
+      <input id="i-level" type="hidden" value="24" />
+      <input id="i-maxlevel" type="hidden"
+             value="20" />
+      
+      <div class="row">
+        <header>
+  <div class="col-xs-12 levels-bar">
+    <!-- logo -->
+    <div class="col-xs-3" style="padding-top:10px;">
+      <p class="hdc-title">La Hora del Código Chile </p>
+    </div>
+
+    <!-- niveles -->
+    <div class="col-xs-6" style="padding-top: 7px">
+      <strong>Nivel</strong>
+      <ul class="levels">
+	<li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>           </ul>
+    </div>
+
+    <!-- opciones -->
+    <div class="col-xs-3" style="padding-top: 4px">
+      <button id="video" class="btn btn-sm btn-success invisible" data-toggle="modal" data-target="#videoModal">Vídeo</button>
+      <button id="game-tutorial" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#helpModal">Pista</button>
+      <button id="reset-level-btn" class="btn btn-sm btn-info">Reiniciar nivel</button>
+    </div>
+
+  </div>
+</header> 
+
+        <div class="col-xs-5 top-space" style="background-color: white">
+          <div id="gameDiv"></div>
+
+<!--<div id="current-level"><div>Nivel 24</div></div>-->
+<div id="buttons">
+  <div class="col-xs-6" style="padding: 5px 5px 5px 0">
+    <button class="btn-lg btn btn-success btn-block" id="exec-button"
+    onclick="ejecutar_javascript()">Iniciar <span class="glyphicon glyphicon-play"></span></button>
+  </div>
+  
+  <div class="col-xs-6" style="padding: 5px 0 5px 5px">
+    <button class="btn btn-lg btn-info btn-block" id="js-button" onclick="mostrar_javascript()">Mostrar C&oacute;digo</button>
+  </div>
+</div>
+
+<div id="game-info" class="col-xs-12" style="padding-left: 0px;
+                                             padding-right: 0px;">
+  <span id="game-info-title"></span>
+  <div class="bg-info" id="game-info-desc">
+      Descripci&oacute;n del nivel actual (este texto es para rellenar
+      la descripci&oacute;n)
+  </div>
+</div>
+        </div>
+        
+        <div class="col-xs-7 top-space">
+          <div class="col-xs-4" style="padding-left: 0;
+                                       padding-right: 0">
+            <h5>Acciones disponibles</h5>
+          </div>
+          <div class="col-xs-8" style="padding-left: 0;
+                                       padding-right: 0">
+            <h5>Acciones a realizar </h5>
+          </div>
+	  <div id="blocklyDiv"></div>
+          
+        </div>
+      </div>
+
+
+      
+          
+      <xml id="toolbox" style="display: none">
+    <block type="avanzar"></block>
+  <block type="girar">
+    <field name="sentido">izquierda</field>
+  </block>
+  <block type="girar">
+    <field name="sentido">derecha</field>
+  </block>
+    <block type="repetir_hasta"></block>
+    <block type="if_caca"></block>
+  </xml>
+
+  <xml id="startBlocks" style="display: none">
+  <block type="al_ejecutar" x="32" y="32">
+  </block>
+  </xml>
+
+      <!--Welcome-->
+<div id="welcomeModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">Nivel 24</h3>
+      </div>
+      <div class="modal-body" style="height: 120px">
+        <div class="col-xs-2">
+          <div class="welcome-image"><img src="" width="64"/></div>
+        </div>
+        <div class="col-xs-10">
+          <p id="welcome-message">One fine body&hellip;</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--Help-->
+<div id="helpModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center help-title">¿Necesitas ayuda?</h3>
+      </div>
+      <div class="modal-body">
+        <p class="help-message">One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--Muralla-->
+<div id="murallaModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title text-center">¡Oh, no!</h3>
+      </div>
+      <div class="modal-body">
+        <p>Has chocado con un obst&aacute;culo. Revisa bien tus pasos y gira cuando sea necesario.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger completed-repeat-btn">Reintentar</button>
+        <button type="button" class="btn btn-warning completed-help-btn">Necesito ayuda</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--forModal ?-->
+<div id="emptyForErrorModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">Nivel 24</h3>
+      </div>
+      <div class="modal-body">
+        <p id="welcome-message">One fine body&hellip;</p>
+        <div class="welcome-image"><img src="" /></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger completed-repeat-btn">Reintentar</button>
+        <button type="button" class="btn btn-warning completed-help-btn">Necesito ayuda</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Bloques sueltos -->
+<div id="errorModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">¡Oh, no!</h3>
+      </div>
+      <div class="modal-body">
+        <p>&iexcl;Tienes bloques sueltos! Aseg&uacute;rate de que todos los bloques que uses est&aacute;n conectados al bloque "al inicio".</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- JS -->
+<div id="jsModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">Código generado</h3>
+      </div>
+      <div class="modal-body">
+        <div class="col-xs-6">
+          <p class="text-left">Llevas <strong id="codelines"></strong> líneas de código.</p>
+        </div>
+        <div class="col-xs-6">
+          <p class="text-right">Has
+          completado <strong id="nlevels"></strong> niveles.</p>
+        </div>
+        <p>
+          <pre><code id="codigoJS" class="javascript"></code></pre>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success completed-next-btn invisible">Siguiente Nivel &nbsp;<span class="glyphicon glyphicon-play"></span></button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Codigo vacio -->
+<div id="codigoVacioModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">¡Oh, no!</h3>
+      </div>
+      <div class="modal-body">
+        <p>No has puesto bloques... Arrastra bloques en "Acciones disponibles" hasta el bloque "al inicio" para que estos se ejecuten.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Nivel completado -->
+<div id="completedModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title text-center">¡Has completado el nivel!</h3>
+      </div>
+      <div class="modal-body">
+        <p>Completaste el nivel. ¡Felicidades!</p>
+        <p class="completedExtra">Este nivel pudo ser completado utilizando solamente <span class="blockNumber"></span> bloques. Puedes volver a intentarlo.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success completed-next-btn">Siguiente Nivel &nbsp;<span class="glyphicon glyphicon-play"></span></button>
+        <button type="button" class="btn btn-primary completed-repeat-btn">Repetir nivel</button>
+        <button type="button" class="btn btn-info completed-code-btn">Ver código</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div id="incompletedModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title text-center">¡Aún no has completado este nivel!</h3>
+      </div>
+      <div class="modal-body">
+        <p>Intenta utilizar tus bloques de manera diferente o agregar m&aacute;s para alcanzar los objetivos.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger completed-repeat-btn">Reintentar</button>
+        <button type="button" class="btn btn-warning completed-help-btn">Necesito ayuda</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- failed -->
+<div id="failedModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title text-center">¡Has fallado!</h3>
+      </div>
+      <div class="modal-body">
+        <p>Debes utilizar el bloque <b><span class="incompleted-block">bloque_x</span></b> para completar este nivel.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger completed-repeat-btn">Reintentar</button>
+        <button type="button" class="btn btn-warning completed-help-btn">Necesito ayuda</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- video -->
+<div id="videoModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="video-modal-body" class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content --> 
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Copyright -->
+<div id="copyrightModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title text-center">Copyright</h3>
+      </div>
+      <div class="modal-body" style="font-size: 14px">
+        <p>
+          Agradecemos a todos quienes han colaborado con el desarrollo
+          y diseño de este juego, además de la producción y edición de
+          los vídeos tutoriales.
+        </p>
+        <p>
+          Personaje Mario Hugo pertenece a &copy; Producciones Aplaplac Ltda.
+          Todos los derechos reservados.
+        </p>
+        <p>
+          Juego desarrollado
+          en <a href="https://developers.google.com/blockly/">Blockly</a>
+          y <a href="http://craftyjs.com/">Crafty</a>.
+        </p>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar esta ventana</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+      
+      <!--<script src="js/modalPlugin.js"></script>-->
+      
+      <script src="level/json/level_24.js"></script>
+      <script src="js/content.js"></script>
+      <script src="../../crafty/crafty-min.js"></script>
+      <script src="../../juego/juego4.js"></script>
+      <script src="js/blockInit.js"></script>
+
+      <script src="js/highlight.pack.js"></script>
+
+
+      
+      <div id="footer" class="col-xs-12">
+        <p><a href="#" data-toggle="modal" data-target="#copyrightModal"><small>Copyright</small></a> &nbsp;
+        &nbsp; <small>Juego creado para
+        funcionar en <a href="http://google.com/chrome">Google Chrome</a>
+        o <a href="http://mozilla.org/firefox">Mozilla Firefox</a></small></p>
+      </div>
+    </div>
+
+  </body>
+</html>
